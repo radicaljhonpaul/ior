@@ -1,0 +1,71 @@
+<template>
+    <!-- <div class="layout-px-spacing"> -->
+        <div class="error404 text-center" style="min-height:100vh;">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4 me-auto mt-5 text-md-start text-center">
+                        <a href="index.html" class="ms-md-5">
+                            <!-- <img alt="image-404" src="@/assets/images/logo2.svg" class="theme-logo" /> -->
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid error-content">
+                <div class="">
+                    <h1 class="error-number">403</h1>
+                    <p class="mini-text">Ooops!</p>
+                    <p class="error-text mb-4 mt-1">The page you requested is forbidden. You will be redirected back in <span>{{ this.countDown }}</span> </p>
+                    <!-- <a href="/" class="btn btn-primary mt-5">Go Back</a> -->
+                </div>
+            </div>
+        </div>
+    <!-- </div> -->
+</template>
+
+<script setup>
+    import '@/assets/sass/pages/error/style-400.scss';
+    import { useMeta } from '@/composables/use-meta';
+    useMeta({ title: 'Error 403' });
+    
+</script>
+<script>
+    import { ref } from 'vue';
+    import { useRouter } from "vue-router";
+
+    export default {
+        components: {  },
+        data () {
+            return {
+                router: useRouter(),
+                countDown: 5,
+                routePath: this.$route.params.route_path,
+            }
+        },
+        methods: {
+            countDownTimer(){
+                if (this.countDown > 0) {
+                    setTimeout(() => {
+                        this.countDown -= 1
+                        this.countDownTimer();
+                    }, 1000);
+                }else{
+                    this.redirectBack();
+                }
+            },
+
+            
+            redirectBack(){
+                if (this.routePath.includes('admin')) {
+                    this.router.push({name: 'Admin'})
+                }else if(this.routePath.includes('client')){
+                    this.router.push({name: 'Client'})
+                }else{
+                    console.log('Error');
+                }
+            },
+        },
+        created: function(){
+            this.countDownTimer();
+        }
+    }
+</script>
